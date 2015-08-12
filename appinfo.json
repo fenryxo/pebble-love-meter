@@ -1,0 +1,18 @@
+{
+  "uuid": "ccd6f143-483b-43b2-8dec-662305b46883",
+  "shortName": "Love Meter",
+  "longName": "Love Meter",
+  "companyName": "Jiří Janoušek",
+  "versionLabel": "0.1",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt"],
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
