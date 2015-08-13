@@ -11,7 +11,9 @@
     "watchface": false
   },
   "appKeys": {
-    "dummy": 0
+    "CONFIG_NAME": 0,
+    "CONFIG_RESULT": 1,
+    "CONFIG_DURATION": 2
   },
   "resources": {
     "media": []

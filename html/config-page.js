@@ -30,11 +30,12 @@ LoveMeter.loadData = function()
 
 LoveMeter.saveData = function()
 {
-    
     for (var i = 0; i < this.keys.length; i++)
     {
         var key = this.keys[i];
-        this.settings[key] = localStorage[key] = this.inputs[key].value;
+        var value = localStorage[key] = this.inputs[key].value;
+        console.log(this.inputs[key].type);
+        this.settings[key] = this.inputs[key].type == "number" ? parseInt(value) : value;
     }
     localStorage["dataSaved"] = true;
     console.log('Got options: ' + JSON.stringify(this.settings));

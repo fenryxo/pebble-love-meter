@@ -1,5 +1,9 @@
 #include <pebble.h>
 
+#define CONFIG_NAME        0
+#define CONFIG_RESULT      1
+#define CONFIG_DURATION    2
+
 static Window* window;
 static TextLayer* text_layer = NULL;
 static Layer* progress_bar = NULL;
@@ -13,6 +17,7 @@ static int step_size = 100;
 static int mode = 0;
 
 static void start_up(void);
+static void inbox_received_handler(DictionaryIterator* iter, void* context);
 
 static void progress_bar_create(void);
 static void progress_bar_update(void);
@@ -67,9 +72,12 @@ static void click_config_provider(void* context)
 
 static void window_load(Window* window)
 {
-    result = 16;
-    duration = 10;
-    snprintf(name, sizeof(name), "%s", "Alena");
+    persist_read_string(CONFIG_NAME, name, sizeof(name));
+    result = persist_read_int(CONFIG_RESULT);
+    duration = persist_read_int(CONFIG_DURATION);
+    if (duration <= 0)
+        duration = 60;
+    
     start_up();
 }
 
@@ -229,6 +237,35 @@ static void destroy_text(void)
     }
 }
 
+
+static void inbox_received_handler(DictionaryIterator* iter, void* context)
+{
+    // High contrast selected?
+    Tuple* name_t = dict_find(iter, CONFIG_NAME);
+    if (name_t)
+    {
+        snprintf(name, sizeof(name), "%s", name_t->value->cstring);
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "name: %s", name);
+        persist_write_string(CONFIG_NAME, name);
+    }
+  
+    Tuple* result_t = dict_find(iter, CONFIG_RESULT);
+    if (result_t)
+    {
+        result = result_t->value->int32;
+        persist_write_int(CONFIG_RESULT, result);
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "result: %d", result);
+    }
+  
+    Tuple* duration_t = dict_find(iter, CONFIG_DURATION);
+    if (duration_t)
+    {
+        duration = duration_t->value->int32;
+        persist_write_int(CONFIG_DURATION, duration);
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "duration: %d", duration);
+    }
+}
+
 static void window_unload(Window *window)
 {
     measurement_destroy();
@@ -246,6 +283,9 @@ static void init(void)
     });
     const bool animated = true;
     window_stack_push(window, animated);
+    
+    app_message_register_inbox_received(inbox_received_handler);
+    app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
 static void deinit(void)
