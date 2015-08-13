@@ -9,7 +9,8 @@ LoveMeter.onReady = function(e)
 
 LoveMeter.onShowConfiguration = function(e)
 {
-  Pebble.openURL('http://localhost:1080/html/config-page.html');
+    var url = 'https://fenryxo.github.io/pebble-love-meter/html/config-page.html';
+    Pebble.openURL(url);
 }
 
 LoveMeter.onWebViewClosed = function(e)
