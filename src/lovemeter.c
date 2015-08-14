@@ -249,7 +249,7 @@ static void results_create(void)
 {
     mode = 3;
     progress = result;
-    heart_change(RESOURCE_ID_HEART_BLACK);
+    heart_change(result >= 50 ? RESOURCE_ID_HEART_BLACK : RESOURCE_ID_HEART_BROKEN);
     progress_bar_create();
     snprintf(progress_text, sizeof(progress_text), "%s\n%d%%", name, result);
     show_text(progress_text);

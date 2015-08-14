@@ -24,6 +24,11 @@
       },
       {
         "type": "png",
+        "name": "HEART_BROKEN",
+        "file": "images/heart_broken.png"
+      },
+      {
+        "type": "png",
         "name": "HEART_BLACK_QUESTION",
         "file": "images/heart_black_question.png"
       },
