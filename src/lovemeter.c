@@ -91,9 +91,9 @@ static void progress_bar_create(void)
 {
     Layer* window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
-	progress_bar = layer_create(GRect(10, 90, bounds.size.w - 20, 10));
+    progress_bar = layer_create(GRect(10, 90, bounds.size.w - 20, 10));
     layer_set_update_proc(progress_bar, progress_bar_update_cb);
-	layer_add_child(window_layer, progress_bar);
+    layer_add_child(window_layer, progress_bar);
 }
 
 static void progress_bar_update(void)
