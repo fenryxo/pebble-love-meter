@@ -16,6 +16,12 @@
     "CONFIG_DURATION": 2
   },
   "resources": {
-    "media": []
+    "media": [
+      {
+        "type": "png",
+        "name": "HEART_BLACK",
+        "file": "images/heart_black.png"
+      }
+    ]
   }
 }

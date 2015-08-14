@@ -7,12 +7,15 @@
 static Window* window;
 static TextLayer* text_layer = NULL;
 static Layer* progress_bar = NULL;
+static GBitmap* heart_bitmap = NULL;
+static BitmapLayer* heart = NULL;
 static AppTimer* timer = NULL;
 static double progress = 0;
 static char progress_text[100];
 static char name[100];
 static int result = 0;
 static int duration = 0;
+static int elapsed = 0;
 static int step_size = 100;
 static int mode = 0;
 
@@ -35,6 +38,9 @@ static void measurement_done(void);
 
 static void results_create(void);
 static void results_destroy(void);
+
+static void heart_create(void);
+static void heart_destroy(void);
 
 static void show_text(const char* text);
 static void destroy_text(void);
@@ -76,7 +82,7 @@ static void window_load(Window* window)
     result = persist_read_int(CONFIG_RESULT);
     duration = persist_read_int(CONFIG_DURATION);
     if (duration <= 0)
-        duration = 60;
+        duration = 15;
     
     start_up();
 }
@@ -85,6 +91,7 @@ static void start_up(void)
 {
     mode = 0;
     show_text("Press a button.");
+    heart_create();
 }
 
 static void progress_bar_create(void)
@@ -131,6 +138,31 @@ static void progress_bar_destroy(void)
     }
 }
 
+static void heart_create(void)
+{
+    Layer* window_layer = window_get_root_layer(window);
+    GRect bounds = layer_get_bounds(window_layer);
+    heart_bitmap = gbitmap_create_with_resource(RESOURCE_ID_HEART_BLACK);
+    heart = bitmap_layer_create(GRect(10, 10, bounds.size.w - 20, 90 - 20));
+    bitmap_layer_set_bitmap(heart, heart_bitmap);
+    //~ layer_set_update_proc(heart, heart_update_cb);
+    layer_add_child(window_layer, bitmap_layer_get_layer(heart));
+}
+
+static void heart_destroy(void)
+{
+    if (heart)
+    {
+        bitmap_layer_destroy(heart);  
+        heart = NULL;
+    }
+    if (heart_bitmap)
+    {
+        gbitmap_destroy(heart_bitmap);  
+        heart_bitmap = NULL;
+    }
+}
+
 static void measurement_text_create(void)
 {
     Layer* window_layer = window_get_root_layer(window);
@@ -166,6 +198,7 @@ static void measurement_timer_cb(void* data)
 static void measurement_start(void)
 {
     progress = 0;
+    elapsed = 0;
     measurement_text_create();
     progress_bar_create();
     
@@ -180,6 +213,7 @@ static void measurement_destroy(void)
 
 static void measurement_step(void)
 {
+    elapsed += step_size;
     if (progress >= 100)
     {
         measurement_done();
@@ -189,6 +223,13 @@ static void measurement_step(void)
         progress += 100.0 / (duration * 1000 / step_size);
         measurement_text_update();
         progress_bar_update();
+        if (elapsed % 500 == 0)
+        {
+            if (heart)
+                heart_destroy();
+            else
+                heart_create();
+        }
         timer = app_timer_register(step_size, measurement_timer_cb, NULL);
     }
 }
@@ -196,6 +237,8 @@ static void measurement_step(void)
 static void measurement_done(void)
 {
     measurement_destroy();
+    if (!heart)
+        heart_create();
     mode = 2;
     show_text("Measurement done.\nPress a button.");
 }
@@ -213,9 +256,9 @@ static void results_destroy(void)
 {
     progress_bar_destroy();
     destroy_text();
+    heart_destroy();
     mode = 4;
 }
-
 
 static void show_text(const char* text)
 {
@@ -236,7 +279,6 @@ static void destroy_text(void)
         text_layer = NULL;
     }
 }
-
 
 static void inbox_received_handler(DictionaryIterator* iter, void* context)
 {
@@ -271,6 +313,7 @@ static void window_unload(Window *window)
     measurement_destroy();
     results_destroy();
     destroy_text();
+    heart_destroy();
 }
 
 static void init(void)
