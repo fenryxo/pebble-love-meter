@@ -1,6 +1,9 @@
 Love Meter Pebble Watchapp
 ==========================
 
+Usage
+-----
+
  1. Configure the application on your phone.  
     ![](./doc/configuration.png)
 
@@ -18,3 +21,9 @@ Love Meter Pebble Watchapp
  5. If the result is 50% or more, a full heart is shown. Otherwise, a broken heart is shown.  
     ![](./doc/result_broken.png) ![](./doc/result_okey.png)
 
+Changelog
+---------
+
+### 0.1 - August 14, 2015
+
+  - Initial release.
