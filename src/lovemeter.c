@@ -39,7 +39,8 @@ static void measurement_done(void);
 static void results_create(void);
 static void results_destroy(void);
 
-static void heart_create(void);
+static void heart_create(int id);
+static void heart_change(int id);
 static void heart_destroy(void);
 
 static void show_text(const char* text);
@@ -91,7 +92,7 @@ static void start_up(void)
 {
     mode = 0;
     show_text("Press a button.");
-    heart_create();
+    heart_create(RESOURCE_ID_HEART_BLACK_QUESTION);
 }
 
 static void progress_bar_create(void)
@@ -138,15 +139,21 @@ static void progress_bar_destroy(void)
     }
 }
 
-static void heart_create(void)
+static void heart_create(int id)
 {
     Layer* window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
-    heart_bitmap = gbitmap_create_with_resource(RESOURCE_ID_HEART_BLACK);
+    heart_bitmap = gbitmap_create_with_resource(id);
     heart = bitmap_layer_create(GRect(10, 10, bounds.size.w - 20, 90 - 20));
     bitmap_layer_set_bitmap(heart, heart_bitmap);
-    //~ layer_set_update_proc(heart, heart_update_cb);
     layer_add_child(window_layer, bitmap_layer_get_layer(heart));
+}
+
+static void heart_change(int id)
+{
+    gbitmap_destroy(heart_bitmap);
+    heart_bitmap = gbitmap_create_with_resource(id);
+    bitmap_layer_set_bitmap(heart, heart_bitmap);
 }
 
 static void heart_destroy(void)
@@ -228,7 +235,7 @@ static void measurement_step(void)
             if (heart)
                 heart_destroy();
             else
-                heart_create();
+                heart_create(RESOURCE_ID_HEART_BLACK_QUESTION);
         }
         timer = app_timer_register(step_size, measurement_timer_cb, NULL);
     }
@@ -238,7 +245,7 @@ static void measurement_done(void)
 {
     measurement_destroy();
     if (!heart)
-        heart_create();
+        heart_create(RESOURCE_ID_HEART_BLACK_QUESTION);
     mode = 2;
     show_text("Measurement done.\nPress a button.");
 }
@@ -247,6 +254,7 @@ static void results_create(void)
 {
     mode = 3;
     progress = result;
+    heart_change(RESOURCE_ID_HEART_BLACK);
     progress_bar_create();
     snprintf(progress_text, sizeof(progress_text), "%s\n%d%%", name, result);
     show_text(progress_text);

@@ -21,6 +21,11 @@
         "type": "png",
         "name": "HEART_BLACK",
         "file": "images/heart_black.png"
+      },
+      {
+        "type": "png",
+        "name": "HEART_BLACK_QUESTION",
+        "file": "images/heart_black_question.png"
       }
     ]
   }
