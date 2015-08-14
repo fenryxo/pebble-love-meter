@@ -126,7 +126,6 @@ static void progress_bar_update_cb(Layer* layer, GContext* ctx)
             bounds.size.h - 2);
         graphics_context_set_fill_color(ctx, GColorWhite);
         graphics_fill_rect(ctx, progress_bounds, 0, GCornerNone);
-    
     }
 }
 
@@ -174,7 +173,6 @@ static void measurement_text_create(void)
 {
     Layer* window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
-
     text_layer = text_layer_create(GRect(10, 110, bounds.size.w - 20, 40));
     text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
     text_layer_set_overflow_mode(text_layer, GTextOverflowModeTrailingEllipsis);
@@ -208,7 +206,6 @@ static void measurement_start(void)
     elapsed = 0;
     measurement_text_create();
     progress_bar_create();
-    
     timer = app_timer_register(step_size, measurement_timer_cb, NULL);
 }
 
@@ -285,7 +282,6 @@ static void destroy_text(void)
 
 static void inbox_received_handler(DictionaryIterator* iter, void* context)
 {
-    // High contrast selected?
     Tuple* name_t = dict_find(iter, CONFIG_NAME);
     if (name_t)
     {
