@@ -26,6 +26,11 @@
         "type": "png",
         "name": "HEART_BLACK_QUESTION",
         "file": "images/heart_black_question.png"
+      },
+      {
+        "type": "png",
+        "name": "HEART_WHITE_QUESTION",
+        "file": "images/heart_white_question.png"
       }
     ]
   }

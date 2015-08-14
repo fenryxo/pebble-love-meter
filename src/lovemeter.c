@@ -230,13 +230,10 @@ static void measurement_step(void)
         progress += 100.0 / (duration * 1000 / step_size);
         measurement_text_update();
         progress_bar_update();
-        if (elapsed % 500 == 0)
-        {
-            if (heart)
-                heart_destroy();
-            else
-                heart_create(RESOURCE_ID_HEART_BLACK_QUESTION);
-        }
+        if (elapsed % 1000 == 0)
+            heart_change(RESOURCE_ID_HEART_BLACK_QUESTION);
+        else if (elapsed % 500 == 0)
+            heart_change(RESOURCE_ID_HEART_WHITE_QUESTION);
         timer = app_timer_register(step_size, measurement_timer_cb, NULL);
     }
 }
@@ -244,8 +241,6 @@ static void measurement_step(void)
 static void measurement_done(void)
 {
     measurement_destroy();
-    if (!heart)
-        heart_create(RESOURCE_ID_HEART_BLACK_QUESTION);
     mode = 2;
     show_text("Measurement done.\nPress a button.");
 }
